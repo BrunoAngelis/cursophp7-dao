@@ -2,11 +2,9 @@
 
 require_once("config.php");
 
-$sql = new SQL();
+$consulta = new Usuario();
 
+$consulta ->loadbyID(1);
 
-$usuarios = $sql->select("SELECT * FROM tb_cadastro");
-
-echo json_encode($usuarios);
-
+echo $consulta;
 ?>
