@@ -78,16 +78,10 @@ class Usuario{
 
 		if (count($result)>0){
 
-			$row = $result[0];
-
-			$this -> setIdusuario($row['idusuario']);
-			$this -> setDeslogin($row['deslogin']);
-			$this -> setDesemail($row['desemail']);
-			$this -> setDesapelido($row['desapelido']);
-			$this -> setDessenha($row['dessenha']);
-			$this -> setDtcadastro(new DateTime($row['dtcadastro']));
+			$this ->setData($result[0]);
+			
 		}
-	}
+	}	
 
 	public static function getList(){
 
@@ -116,18 +110,49 @@ class Usuario{
 
 		if (count($result)>0){
 
-			$row = $result[0];
 
-			$this -> setIdusuario($row['idusuario']);
-			$this -> setDeslogin($row['deslogin']);
-			$this -> setDesemail($row['desemail']);
-			$this -> setDesapelido($row['desapelido']);
-			$this -> setDessenha($row['dessenha']);
-			$this -> setDtcadastro(new DateTime($row['dtcadastro']));
+			$this ->setData($result[0]);
+
+			
 		} else{
 
 			throw new Exception("Login e/ou senha inválidos.");
 		} 
+	}
+
+	public function setData($data){
+
+		$this -> setIdusuario($data['idusuario']);
+		$this -> setDeslogin($data['deslogin']);
+		$this -> setDesemail($data['desemail']);
+		$this -> setDesapelido($data['desapelido']);
+		$this -> setDessenha($data['dessenha']);
+		$this -> setDtcadastro(new DateTime($data['dtcadastro']));
+
+	}
+
+	public function insert(){
+
+		$sql = new Sql();
+
+		$result = $sql -> select("CALL sp_cadastro_insert(:LOGIN,:EMAIL,:APELIDO,:PASSWORD)",array(
+			':LOGIN'=>$this->getDeslogin(),
+			':EMAIL'=>$this->getDesemail(),
+			':APELIDO'=>$this->getDesapelido(),
+			':PASSWORD'=>$this->getDessenha()
+		));
+
+		if (count($result)>0){
+			$this ->setData($result[0]);
+		}
+	}
+
+	public function __construct ($login= "", $email = "", $apelido = "", $senha =""){
+
+		$this->setDeslogin($login);
+		$this->setDesemail($email);
+		$this->setDesapelido($apelido);
+		$this->setDessenha($senha);
 	}
 
 	public function __toString(){
